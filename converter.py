@@ -1,8 +1,8 @@
 import streamlit as st
-from pint import UnitRegistry
+import pint 
 
 # Set up unit registry
-ureg = UnitRegistry()
+ureg = pint.UnitRegistry()
 
 # Streamlit app title
 st.title("CONVERTO")
