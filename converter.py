@@ -7,8 +7,31 @@ ureg = pint.UnitRegistry()
 # Streamlit app title
 st.title("CONVERTO")
 
-# Unit mapping (friendly name to pint unit)
+# Comprehensive unit mapping (friendly name to pint unit)
 unit_mapping = {
+    # Length
+    "meters": "meter",
+    "kilometers": "kilometer",
+    "centimeters": "centimeter",
+    "millimeters": "millimeter",
+    "miles": "mile",
+    "yards": "yard",
+    "feet": "foot",
+    "inches": "inch",
+
+    # Weight
+    "kilograms": "kilogram",
+    "grams": "gram",
+    "pounds": "pound",
+    "ounces": "ounce",
+
+    # Volume
+    "liters": "liter",
+    "milliliters": "milliliter",
+    "gallons": "gallon",
+    "cups": "cup",
+
+    # Area
     "square meters": "m**2",
     "square kilometers": "km**2",
     "square miles": "mile**2",
@@ -17,7 +40,57 @@ unit_mapping = {
     "square yards": "yd**2",
     "square feet": "ft**2",
     "square inches": "in**2",
-    # Add other mappings here as needed
+
+    # Data Transfer Rate
+    "bits per second": "bit / second",
+    "kilobits per second": "kilobit / second",
+    "megabits per second": "megabit / second",
+    "gigabits per second": "gigabit / second",
+
+    # Digital Storage
+    "bits": "bit",
+    "kilobits": "kilobit",
+    "megabits": "megabit",
+    "gigabits": "gigabit",
+    "terabits": "terabit",
+    "bytes": "byte",
+    "kilobytes": "kilobyte",
+    "megabytes": "megabyte",
+    "gigabytes": "gigabyte",
+    "terabytes": "terabyte",
+
+    # Energy
+    "joules": "joule",
+    "kilojoules": "kilojoule",
+    "calories": "calorie",
+    "kilocalories": "kilocalorie",
+    "watt hours": "watt_hour",
+    "kilowatt hours": "kilowatt_hour",
+
+    # Frequency
+    "hertz": "hertz",
+    "kilohertz": "kilohertz",
+    "megahertz": "megahertz",
+    "gigahertz": "gigahertz",
+
+    # Plane Angle
+    "degrees": "degree",
+    "radians": "radian",
+    "gradians": "gradian",
+
+    # Pressure
+    "pascals": "pascal",
+    "hectopascals": "hectopascal",
+    "kilopascals": "kilopascal",
+    "bars": "bar",
+    "psi": "psi",
+    "atmospheres": "atmosphere",
+
+    # Speed
+    "meters per second": "meter/second",
+    "kilometers per hour": "kilometer/hour",
+    "miles per hour": "mile/hour",
+    "knots": "knot"
 }
 
 # Supported categories and units
@@ -26,7 +99,9 @@ unit_categories = {
     "Weight": ["kilograms", "grams", "pounds", "ounces"],
     "Temperature": ["celsius", "fahrenheit", "kelvin"],
     "Volume": ["liters", "milliliters", "gallons", "cups"],
-    "Area": list(unit_mapping.keys()),
+    "Area": list(unit_mapping.keys() & {
+        "square meters", "square kilometers", "square miles", "acres", "hectares", "square yards", "square feet", "square inches"
+    }),
     "Data Transfer Rate": ["bits per second", "kilobits per second", "megabits per second", "gigabits per second"],
     "Digital Storage": ["bits", "kilobits", "megabits", "gigabits", "terabits", "bytes", "kilobytes", "megabytes", "gigabytes", "terabytes"],
     "Energy": ["joules", "kilojoules", "calories", "kilocalories", "watt hours", "kilowatt hours"],
@@ -70,6 +145,7 @@ if st.button("Convert"):
     try:
         if category == "Temperature":
             result = convert_temperature(value, from_unit, to_unit)
+
         elif category == "Fuel Economy":
             if from_unit == "kilometers per liter" and to_unit == "miles per gallon":
                 result = value * 2.35215
@@ -77,8 +153,9 @@ if st.button("Convert"):
                 result = value / 2.35215
             else:
                 result = value
+
         else:
-            # Use unit mapping if it exists, otherwise use the original unit name
+            # Always apply the unit mapping
             from_unit_pint = unit_mapping.get(from_unit, from_unit.replace(" ", "_"))
             to_unit_pint = unit_mapping.get(to_unit, to_unit.replace(" ", "_"))
 
@@ -86,5 +163,6 @@ if st.button("Convert"):
             result = quantity.to(to_unit_pint).magnitude
 
         st.success(f"{value} {from_unit} = {result:.3f} {to_unit}")
+
     except Exception as e:
         st.error(f"Conversion error: {e}")
